@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Сауда жасай білесің бе?</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --secondary: #f59e0b;
+      --accent: #10b981;
+      --danger: #ef4444;
+      --bg-gradient: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #fef3c7 100%);
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --radius: 20px;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--text-main);
+      padding: 16px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Анимацияланған сауда элементтері (Фон) */
+    .bg-decorations {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .floating-item {
+      position: absolute;
+      font-size: 2.2rem;
+      animation: float 6s ease-in-out infinite;
+      opacity: 0.7;
+    }
+
+    .item-1 { top: 10%; left: 8%; animation-delay: 0s; }
+    .item-2 { top: 15%; right: 10%; animation-delay: 1.5s; }
+    .item-3 { bottom: 15%; left: 12%; animation-delay: 3s; }
+    .item-4 { bottom: 10%; right: 8%; animation-delay: 4.5s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-18px) rotate(8deg); }
+    }
+
+    /* Негізгі контейнер */
+    .app-container {
+      width: 100%;
+      max-width: 760px;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 32px 28px;
+      position: relative;
+      z-index: 10;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      transition: all 0.3s ease;
+    }
+
+    /* ЭКРАНДАР: БАСТЫ БЕТ, ТЕСТ, НӘТИЖЕ */
+    .screen {
+      display: none;
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* БАСТЫ БЕТ */
+    .hero-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .hero-cart {
+      font-size: 4.5rem;
+      display: inline-block;
+      animation: cartBounce 2s infinite alternate ease-in-out;
+      margin-bottom: 12px;
+    }
+
+    @keyframes cartBounce {
+      0% { transform: translateX(-8px) rotate(-3deg); }
+      100% { transform: translateX(8px) rotate(3deg); }
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 24px;
+      font-weight: 500;
+    }
+
+    .input-group {
+      margin-bottom: 24px;
+    }
+
+    .input-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid #cbd5e1;
+      border-radius: 12px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-group input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .feature-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 14px;
+      border-radius: 14px;
+      text-align: center;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    /* БАТЫРМАЛАР */
+    .btn-main {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 14px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+      transition: all 0.2s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-main:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2deg);
+      box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+    }
+
+    .btn-main:disabled {
+      background: #cbd5e1;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    /* ТЕСТ ЭКРАНЫ */
+    .quiz-header {
+      margin-bottom: 20px;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 12px;
+      background: #e2e8f0;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 10%;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+      border-radius: 10px;
+      transition: width 0.4s ease;
+    }
+
+    .question-card {
+      background: #ffffff;
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .question-text {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .option-btn {
+      background: #ffffff;
+      border: 2px solid #e2e8f0;
+      padding: 14px 18px;
+      border-radius: 14px;
+      text-align: left;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+    }
+
+    .option-btn:hover:not(.disabled) {
+      border-color: var(--primary);
+      background: #f5f3ff;
+      transform: translateX(4deg);
+    }
+
+    .option-btn.selected {
+      border-color: var(--primary);
+      background: #eef2ff;
+    }
+
+    .option-btn.correct {
+      border-color: var(--accent) !important;
+      background: #ecfdf5 !important;
+      color: #065f46 !important;
+    }
+
+    .option-btn.incorrect {
+      border-color: var(--danger) !important;
+      background: #fef2f2 !important;
+      color: #991b1b !important;
+    }
+
+    .option-btn.disabled {
+      cursor: default;
+    }
+
+    .feedback-box {
+      padding: 14px 18px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      font-weight: 600;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .feedback-box.correct {
+      display: block;
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .feedback-box.incorrect {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+    }
+
+    /* НӘТИЖЕ ЭКРАНЫ */
+    .result-card {
+      text-align: center;
+      padding: 10px 0;
+    }
+
+    .result-badge {
+      font-size: 4rem;
+      margin-bottom: 12px;
+    }
+
+    .result-score {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 12px 0;
+    }
+
+    .result-details {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 18px;
+      margin: 20px 0;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      text-align: center;
+    }
+
+    .detail-item {
+      padding: 8px;
+    }
+
+    .detail-item .label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .detail-item .value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .feedback-message {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 24px;
+    }
+
+    /* Конфетти кенебі */
+    #confetti-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    @media (max-width: 600px) {
+      .app-container {
+        padding: 20px 16px;
+      }
+
+      h1 {
+        font-size: 1.6rem;
+      }
+
+      .question-text {
+        font-size: 1.05rem;
+      }
+
+      .option-btn {
+        padding: 12px 14px;
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Фондық сауда анимациялық белгілері -->
+  <div class="bg-decorations">
+    <div class="floating-item item-1">🛒</div>
+    <div class="floating-item item-2">🏷️</div>
+    <div class="floating-item item-3">💰</div>
+    <div class="floating-item item-4">💳</div>
+  </div>
+
+  <div class="app-container">
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- 1. БАСТЫ БЕТ -->
+    <div id="start-screen" class="screen active">
+      <div class="hero-header">
+        <div class="hero-cart">🛒</div>
+        <h1>Сауда жасай білесің бе?</h1>
+        <p class="subtitle">Саналы сатып алушыдан сауда сарапшысына дейін!</p>
+      </div>
+
+      <div class="input-group">
+        <label for="student-name">Оқушының аты-жөні:</label>
+        <input type="text" id="student-name" placeholder="Мысалы: Арманұлы Алихан" autocomplete="off">
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">📋 10 сауалнамалық сұрақ</div>
+        <div class="feature-card">🎯 Барлығы: 10 ұпай</div>
+        <div class="feature-card">💡 Дереу кері байланыс</div>
+      </div>
+
+      <button id="start-btn" class="btn-main">Ойынды бастау 🚀</button>
+    </div>
+
+    <!-- 2. ТЕСТ ЭКРАНЫ -->
+    <div id="quiz-screen" class="screen">
+      <div class="quiz-header">
+        <div class="progress-info">
+          <span id="question-tracker">Сұрақ 1 / 10</span>
+          <span id="score-tracker">Ұпай: 0</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div id="progress-bar" class="progress-bar-fill"></div>
+        </div>
+      </div>
+
+      <div class="question-card">
+        <div id="question-text" class="question-text">Сұрақ жүктелуде...</div>
+      </div>
+
+      <div id="options-container" class="options-grid">
+        <!-- Нұсқалар JS арқылы қосылады -->
+      </div>
+
+      <div id="feedback-box" class="feedback-box">
+        <!-- Кері байланыс мәтіні -->
+      </div>
+
+      <button id="next-btn" class="btn-main" style="display: none;">Келесі сұрақ ➔</button>
+    </div>
+
+    <!-- 3. НӘТИЖЕ БЕТІ -->
+    <div id="result-screen" class="screen">
+      <div class="result-card">
+        <div class="result-badge" id="result-emoji">🏆</div>
+        <h2>Тамаша нәтиже!</h2>
+        <p class="subtitle" id="result-student-name">Оқушы</p>
+
+        <div class="result-score" id="result-score-display">0 / 10</div>
+        <div class="feedback-message" id="result-feedback">Сен – саналы сатып алушысың!</div>
+
+        <div class="result-details">
+          <div class="detail-item">
+            <div class="label">Дұрыс жауаптар</div>
+            <div class="value" id="correct-count">0 / 10</div>
+          </div>
+          <div class="detail-item">
+            <div class="label">Пайыздық көрсеткіш</div>
+            <div class="value" id="percentage-display">0%</div>
+          </div>
+        </div>
+
+        <button id="restart-btn" class="btn-main">Қайта бастау 🔄</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ТЕСТ СҰРАҚТАРЫ ЖӘНЕ КІЛТТЕРІ (10 сұрақ = 10 балл)
+    const quizData = [
+      {
+        question: "1. 1-мәтіннің негізгі ойы қандай?",
+        options: [
+          "A) Қымбат тауар сатып алу тиімді.",
+          "B) Ақшаны жоспарлап, баға мен қажеттілікті ескеру керек.",
+          "C) Жеңілдік кезінде көп зат сатып алу қажет.",
+          "D) Сауда жасау үшін жарнаманы бақылау керек."
+        ],
+        correct: 1, // B
+        explanation: "Дұрыс жауап: B. Мәтінде ақшаны жоспарлау, баға мен қажеттілікті саралау басты орында."
+      },
+      {
+        question: "2. 2-мәтінде қандай құндылықтарға басымдық беріледі?",
+        options: [
+          "A) Жылдамдық пен бәсекелестікке.",
+          "B) Үнемдеу мен жеңілдікке.",
+          "C) Адалдық, сапа және сенімге.",
+          "D) Жарнама мен пайдаға."
+        ],
+        correct: 2, // C
+        explanation: "Дұрыс жауап: C. Автор саудадағы адалдық, өнім сапасы мен сенімге ерекше назар аударады."
+      },
+      {
+        question: "3. Екі мәтінге ортақ тақырыпты анықта.",
+        options: [
+          "A) Саналы сауда жасау.",
+          "B) Отбасылық бюджетті көбейту.",
+          "C) Дүкендердің жұмыс тәртібі.",
+          "D) Тауар өндіру жолдары."
+        ],
+        correct: 0, // A
+        explanation: "Дұрыс жауап: A. Екі мәтін де сауданы ақылмен, саналы түрде жүргізуге бағытталған."
+      },
+      {
+        question: "4. Екі мәтінде де көтерілген ортақ мәселе қандай?",
+        options: [
+          "A) Тауарды тек жеңілдікпен сатып алу.",
+          "B) Сауда кезінде дұрыс шешім қабылдау.",
+          "C) Сатушының пайдасын арттыру.",
+          "D) Дүкендердің санын көбейту."
+        ],
+        correct: 1, // B
+        explanation: "Дұрыс жауап: B. Екі мәтінде де сатып алу кезіндегі дұрыс таңдау мен шешім басты мәселе."
+      },
+      {
+        question: "5. Авторлардың көзқарастарының айырмашылығы неде?",
+        options: [
+          "A) Бірінші автор сауданы қолдамайды, екіншісі қолдайды.",
+          "B) Бірінші автор тек сапаны, екіншісі тек бағаны қарастырады.",
+          "C) Бірінші автор үнемдеу мен бағаға, екінші автор адалдық пен сапаға басымдық береді.",
+          "D) Екі автор да тек арзан тауар сатып алуды ұсынады."
+        ],
+        correct: 2, // C
+        explanation: "Дұрыс жауап: C. 1-автор баға мен үнемдеуге, ал 2-автор сапа мен адалдыққа басымдық береді."
+      },
+      {
+        question: "6. Екі мәтіндегі ақпаратты қай тұжырым дұрыс біріктіреді?",
+        options: [
+          "A) Арзан тауар әрқашан тиімді болады.",
+          "B) Саудада тек пайда маңызды.",
+          "C) Сапалы тауарды тек қымбат дүкеннен сатып алу керек.",
+          "D) Тиімді саудада баға, сапа және адалдық ескерілуі қажет."
+        ],
+        correct: 3, // D
+        explanation: "Дұрыс жауап: D. Баға, сапа және адалдық — тиімді сауданың негізгі ұстанымдары."
+      },
+      {
+        question: "7. Сатып алушы бір дүкеннен арзан, бірақ сапасы белгісіз тауарды, екінші дүкеннен қымбатырақ, кепілдігі бар тауарды көрді. Екі мәтіннің мазмұнына сәйкес ең тиімді шешім қайсы?",
+        options: [
+          "A) Әрқашан ең арзан тауарды таңдау.",
+          "B) Тек жарнамасы көп тауарды сатып алу.",
+          "C) Бағаны, сапаны және кепілдік шарттарын салыстырып, шешім қабылдау.",
+          "D) Қымбат тауардың бәрін сапалы деп есептеу."
+        ],
+        correct: 2, // C
+        explanation: "Дұрыс жауап: C. Барлық факторларды (баға, сапа, кепілдік) салыстыру ең сауатты таңдау."
+      },
+      {
+        question: "8. Қай пікір екі автордың көзқарасын да ескереді?",
+        options: [
+          "A) Пайда табу үшін сатып алушыны алдауға болады.",
+          "B) Үнемдеу маңызды, бірақ ол сапа мен адалдыққа нұқсан келтірмеуі керек.",
+          "C) Жеңілдік болмаса, сауда жасау тиімсіз.",
+          "D) Сатып алушы тек сатушының сөзіне сенуі керек."
+        ],
+        correct: 1, // B
+        explanation: "Дұрыс жауап: B. Бұл тұжырым үнемдеуді де, сапа мен адалдықты да тең ұстанады."
+      },
+      {
+        question: "9. «Саудада пайда маңызды ма, әлде адамгершілік құндылықтар маңызды ма?» тақырыбындағы эссеге қай тұжырымды қолдану тиімді?",
+        options: [
+          "A) Сауда орындары әртүрлі болады.",
+          "B) Адамдар күн сайын дүкенге барады.",
+          "C) Кейбір тауарлар қымбат, ал кейбіреулері арзан.",
+          "D) Пайданы ойлау қажет, алайда адалдық пен сапа ұзақ мерзімді сенім қалыптастырады."
+        ],
+        correct: 3, // D
+        explanation: "Дұрыс жауап: D. Адалдық пен сапа ұзақ мерзімді сенім орнатады, бұл эссенің негізгі идеясы."
+      },
+      {
+        question: "10. Эсседе екі мәтіндегі ақпаратты тиімді жинақтау тәсілін анықта.",
+        options: [
+          "A) Бірінші мәтінді толық көшіріп жазу.",
+          "B) Тек жеңілдік туралы ақпаратты пайдалану.",
+          "C) Үнемдеу туралы ойды адалдық пен сапа туралы оймен байланыстырып, өз пікірін дәлелдеу.",
+          "D) Мәтіндерге қатысы жоқ жеке оқиғаны баяндау."
+        ],
+        correct: 2, // C
+        explanation: "Дұрыс жауап: C. Екі мәтіндегі ойды (үнемдеу + сапа) байланыстырып, дәлелді аргумент жазу."
+      }
+    ];
+
+    // КҮЙ (STATE)
+    let currentQuestion = 0;
+    let score = 0;
+    let correctAnswersCount = 0;
+    let studentName = "";
+    let selectedOption = null;
+
+    // DOM ЭЛЕМЕНТТЕРІ
+    const startScreen = document.getElementById('start-screen');
+    const quizScreen = document.getElementById('quiz-screen');
+    const resultScreen = document.getElementById('result-screen');
+
+    const nameInput = document.getElementById('student-name');
+    const startBtn = document.getElementById('start-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const restartBtn = document.getElementById('restart-btn');
+
+    const questionTracker = document.getElementById('question-tracker');
+    const scoreTracker = document.getElementById('score-tracker');
+    const progressBar = document.getElementById('progress-bar');
+
+    const questionText = document.getElementById('question-text');
+    const optionsContainer = document.getElementById('options-container');
+    const feedbackBox = document.getElementById('feedback-box');
+
+    // ОЙЫНДЫ БАСТАУ
+    startBtn.addEventListener('click', () => {
+      const name = nameInput.value.trim();
+      if (!name) {
+        alert("Өтініш, аты-жөніңізді енгізіңіз!");
+        return;
+      }
+      studentName = name;
+      startScreen.classList.remove('active');
+      quizScreen.classList.add('active');
+      loadQuestion();
+    });
+
+    // СҰРАҚТЫ ЖҮКТЕУ
+    function loadQuestion() {
+      const q = quizData[currentQuestion];
+      selectedOption = null;
+
+      questionTracker.textContent = `Сұрақ ${currentQuestion + 1} / 10`;
+      scoreTracker.textContent = `Ұпай: ${score}`;
+      progressBar.style.width = `${((currentQuestion + 1) / 10) * 100}%`;
+
+      questionText.textContent = q.question;
+      optionsContainer.innerHTML = '';
+      feedbackBox.style.display = 'none';
+      feedbackBox.className = 'feedback-box';
+      nextBtn.style.display = 'none';
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = `<span>${opt}</span>`;
+        btn.addEventListener('click', () => selectOption(idx));
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    // ЖАУАП ТАҢДАУ
+    function selectOption(index) {
+      if (selectedOption !== null) return; // Жауап өзгермейді
+      selectedOption = index;
+
+      const q = quizData[currentQuestion];
+      const buttons = optionsContainer.children;
+
+      // Түймелерді құлыптау
+      for (let btn of buttons) {
+        btn.classList.add('disabled');
+      }
+
+      if (index === q.correct) {
+        buttons[index].classList.add('correct');
+        score += 1;
+        correctAnswersCount += 1;
+        scoreTracker.textContent = `Ұпай: ${score}`;
+
+        feedbackBox.textContent = "🎉 Жарайсың! Дұрыс жауап!";
+        feedbackBox.classList.add('correct');
+        triggerConfetti();
+      } else {
+        buttons[index].classList.add('incorrect');
+        buttons[q.correct].classList.add('correct');
+
+        feedbackBox.textContent = `❌ Қате! ${q.explanation}`;
+        feedbackBox.classList.add('incorrect');
+      }
+
+      nextBtn.style.display = 'flex';
+    }
+
+    // КЕЛЕСІ СҰРАҚ
+    nextBtn.addEventListener('click', () => {
+      currentQuestion++;
+      if (currentQuestion < quizData.length) {
+        loadQuestion();
+      } else {
+        showResults();
+      }
+    });
+
+    // НӘТИЖЕНІ КӨРСЕТУ
+    function showResults() {
+      quizScreen.classList.remove('active');
+      resultScreen.classList.add('active');
+
+      document.getElementById('result-student-name').textContent = studentName;
+      document.getElementById('result-score-display').textContent = `${score} / 10`;
+      document.getElementById('correct-count').textContent = `${correctAnswersCount} / 10`;
+
+      const percentage = Math.round((score / 10) * 100);
+      document.getElementById('percentage-display').textContent = `${percentage}%`;
+
+      const feedbackEl = document.getElementById('result-feedback');
+      const emojiEl = document.getElementById('result-emoji');
+
+      if (score >= 9) {
+        emojiEl.textContent = '👑';
+        feedbackEl.textContent = "Сен – сауда сарапшысысың!";
+      } else if (score >= 6) {
+        emojiEl.textContent = '⭐';
+        feedbackEl.textContent = "Сен – ақылды талдаушысың!";
+      } else {
+        emojiEl.textContent = '🛍️';
+        feedbackEl.textContent = "Сен – саналы сатып алушысың!";
+      }
+
+      triggerConfetti();
+    }
+
+    // ҚАЙТА БАСТАУ
+    restartBtn.addEventListener('click', () => {
+      currentQuestion = 0;
+      score = 0;
+      correctAnswersCount = 0;
+      selectedOption = null;
+
+      resultScreen.classList.remove('active');
+      startScreen.classList.add('active');
+    });
+
+    // ШАҒЫН КОНФЕТТИ АНИМАЦИЯСЫ
+    function triggerConfetti() {
+      const canvas = document.getElementById('confetti-canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+
+      const particles = [];
+      const colors = ['#4f46e5', '#f59e0b', '#10b981', '#ef4444', '#ec4899'];
+
+      for (let i = 0; i < 40; i++) {
+        particles.push({
+          x: canvas.width / 2,
+          y: canvas.height / 2,
+          vx: (Math.random() - 0.5) * 10,
+          vy: (Math.random() - 0.5) * 10 - 3,
+          size: Math.random() * 6 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          life: 60
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let active = false;
+
+        particles.forEach(p => {
+          if (p.life > 0) {
+            active = true;
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.2; // гравитация
+            p.life--;
+
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        });
+
+        if (active) {
+          requestAnimationFrame(animate);
+        }
+      }
+
+      animate();
+    }
+  </script>
+</body>
+</html>
